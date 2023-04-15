@@ -6,11 +6,22 @@ const { genJWT } = require('../helpers/jwt.helpers');
 
 const getUser = async (req, res) => {
 
-    const userDB = await User.find({}, 'name email role google active img');
+    const from = Number(req.query.from) || 0;
+
+    const [userDB, total] = await Promise.all([
+        User.find({}, 'name email role google active img')
+            .skip(from)
+            .limit(5),
+
+        User.countDocuments()
+    ])
+
+
 
     res.json({
         ok: true,
-        userDB
+        userDB,
+        total
     });
 }
 
