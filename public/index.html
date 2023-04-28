@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Google SignIn</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <h1> Google SignIn</h1>
+        <div id="buttonDiv"></div> 
+
+    
+    
+    
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+        <script>
+
+            var url = 'http://localhost:3000/api/login/google';
+            function handleCredentialResponse(response) {
+                // console.log("Encoded JWT ID Token:" + response.credential);
+                fetch(url,{
+                    method: 'POST',
+                    headers:{'Content-Type': 'application/json'},
+                    body: JSON.stringify({token: response.credential})
+                })
+                .then(resp => resp.json())
+                .then(data => console.log('Our server', data))
+                .catch(console.log)
+            }
+            window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: "209548980707-g88ljokp53mgq2dih9aqctv1jtqgshat.apps.googleusercontent.com",
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("buttonDiv"),
+                { theme: "outline", size: "large" }  // customization attributes
+            );
+            google.accounts.id.prompt(); // also display the One Tap dialog
+            }
+        </script>
+
+    </body>
+</html>
