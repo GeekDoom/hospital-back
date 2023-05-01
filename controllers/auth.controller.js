@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/users.model');
 const { genJWT } = require('../helpers/jwt.helpers');
 const { googleVerify } = require('../helpers/google-verify.helpers');
+const jwt = require('jsonwebtoken');
 
 
 const login = async (req, res = response) => {
@@ -50,12 +51,13 @@ const login = async (req, res = response) => {
 
 const googleSignIn = async (req, res = response) => {
 
-    const googleToken = req.body.token;
+
 
 
     try {
+        const googleToken = req.body.token;
         const { email, name, picture } = await googleVerify(googleToken);
-
+        
         const userDB = await User.findOne({ email });
         let user;
         if (!userDB) {
@@ -78,7 +80,7 @@ const googleSignIn = async (req, res = response) => {
         const token = await genJWT(user.id);
         res.json({
             ok: true,
-            email, name, picture,
+            name, email, picture,
             token
         })
 

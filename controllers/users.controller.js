@@ -53,6 +53,7 @@ const createUser = async (req, res = response) => {
         //Generate JWT
         const token = await genJWT(userDB.id)
 
+
         res.json({
             ok: true,
             userDB,
